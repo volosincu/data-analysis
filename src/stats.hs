@@ -5,8 +5,6 @@ import Text.CSV
 import Data.Maybe
 import Data.List
 import Data.Ord
-import Database.HDBC
-import Database.HDBC.Sqlite3
 
 
 bbEither = either (const []) (filter (\row -> 2 <= length row))
@@ -72,6 +70,15 @@ modPred Nothing (v, f) = Just (v, f)
 modPred (Just (v, f)) (v1, f1) = if f > f1 then Just (v, f) else Just (v1, f1)
 
 
+covariance xs = covariance xs xs
+
+variance = covariance xs xs
+
+linearRegression :: [Double] -> [Double] -> (Double, Double)
+linearRegression xs ys = (gradient, intercept)
+	where
+		gradient = covariance xs ys / variance xs
+		intercept = (average ys) - gradient * (average xs)
 
 
 
